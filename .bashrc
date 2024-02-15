@@ -19,57 +19,13 @@ export BROWSER="firefox"
 
 # directories
 export REPOS="$HOME/Repos"
-export GITUSER="mischavandenburg"
+export GITUSER="thebittencode"
 export GHREPOS="$REPOS/github.com/$GITUSER"
 export DOTFILES="$GHREPOS/dotfiles"
 export LAB="$GHREPOS/lab"
 export SCRIPTS="$DOTFILES/scripts"
 export ICLOUD="$HOME/icloud"
 export SECOND_BRAIN="$HOME/garden"
-
-# Go related. In general all executables and scripts go in .local/bin
-export GOBIN="$HOME/.local/bin"
-export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
-# export GOPATH="$HOME/.local/share/go"
-export GOPATH="$HOME/go/"
-
-# dotnet
-export DOTNET_ROOT="/opt/homebrew/opt/dotnet/libexec"
-
-# ~~~~~~~~~~~~~~~ Path configuration ~~~~~~~~~~~~~~~~~~~~~~~~
-# function from Arch Wiki, to prevent adding directories multiple times
-
-# set_path(){
-#
-#     # Check if user id is 1000 or higher
-#     [ "$(id -u)" -ge 1000 ] || return
-#
-#     for i in "$@";
-#     do
-#         # Check if the directory exists
-#         [ -d "$i" ] || continue
-#
-#         # Check if it is not already in your $PATH.
-#         echo "$PATH" | grep -Eq "(^|:)$i(:|$)" && continue
-#
-#         # Then append it to $PATH and export it
-#         export PATH="${PATH}:$i"
-#     done
-# }
-#
-# set_path "$HOME"/git/lab/bash "$HOME"/.local/bin
-
-# https://unix.stackexchange.com/questions/26047/how-to-correctly-add-a-path-to-path
-# PATH="${PATH:+${PATH}:}~/opt/bin"   # appending
-# PATH="~/opt/bin${PATH:+:${PATH}}"   # prepending
-
-# Commands also provided by macOS and the commands dir, dircolors, vdir have been installed with the prefix "g".
-# If you need to use these commands with their normal names, you can add a "gnubin" directory to your PATH with:
-#  PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
-
-PATH="${PATH:+${PATH}:}"$SCRIPTS":/opt/homebrew/opt/dotnet@6/bin:/opt/homebrew/opt/dotnet/bin:"$HOME"/.local/bin:"$HOME"/.dotnet/tools" # appending
-
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # ~~~~~~~~~~~~~~~ History ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -103,16 +59,6 @@ clone() {
 	cd "$name"
 } && export -f clone
 
-# ~~~~~~~~~~~~~~~ SSH ~~~~~~~~~~~~~~~~~~~~~~~~
-# SSH Script from arch wiki
-
-if ! pgrep -u "$USER" ssh-agent >/dev/null; then
-	ssh-agent >"$XDG_RUNTIME_DIR/ssh-agent.env"
-fi
-if [[ ! "$SSH_AUTH_SOCK" ]]; then
-	source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
-fi
-
 # Only run on Ubuntu
 
 if [[ $(grep -E "^(ID|NAME)=" /etc/os-release | grep -q "ubuntu")$? == 0 ]]; then
@@ -132,6 +78,7 @@ ssh-add -q ~/.ssh/vanoord
 export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWSTASHSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
+
 # Explicitly unset color (default anyhow). Use 1 to set it.
 export GIT_PS1_SHOWCOLORHINTS=1
 export GIT_PS1_DESCRIBE_STYLE="branch"
@@ -153,26 +100,10 @@ alias v=nvim
 # alias vim=nvim
 
 # cd
-alias vo='cd $REPOS/github.com/VanOord/'
 alias ..="cd .."
-alias scripts='cd $SCRIPTS'
-alias cdblog="cd ~/websites/blog"
-alias cdpblog='cd $SECOND_BRAIN/2-areas/blog/content'
-alias lab='cd $LAB'
-alias alab='cd $GHREPOS/azure-lab'
 alias dot='cd $GHREPOS/dotfiles'
 alias repos='cd $REPOS'
-alias cdgo='cd $GHREPOS/go/'
-alias ex='cd $REPOS/github.com/mischavandenburg/go/Exercism/'
-alias rwdot='cd $REPOS/github.com/rwxrob/dot'
 alias c="clear"
-alias icloud="cd \$ICLOUD"
-alias rob='cd $REPOS/github.com/rwxrob'
-alias homelab='cd $REPOS/github.com/mischavandenburg/homelab/'
-alias hl='homelab'
-alias hlp='cd $REPOS/github.com/mischavandenburg/homelab-private/'
-alias hlps='cd $REPOS/github.com/mischavandenburg/homelab-private-staging/'
-alias hlpp='cd $REPOS/github.com/mischavandenburg/homelab-private-production/'
 
 # ls
 alias ls='ls --color=auto'
@@ -205,44 +136,6 @@ alias sz='source ~/.zshrc'
 alias sbr='source ~/.bashrc'
 alias s='startx'
 
-# vim & second brain
-alias sb="cd \$SECOND_BRAIN"
-alias in="cd \$SECOND_BRAIN/0-inbox/"
-alias vbn='python ~/git/python/brainfile.py'
-
-# starting programmes
-alias cards='python3 /opt/homebrew/lib/python3.11/site-packages/mtg_proxy_printer/'
-
-# terraform
-alias tp='terraform plan'
-
-# fun
-alias fishies=asciiquarium
-
-# kubectl
-alias k='kubectl'
-source <(kubectl completion bash)
-complete -o default -F __start_kubectl k
-alias kgp='kubectl get pods'
-alias kc='kubectx'
-alias kn='kubens'
-
-alias kcs='kubectl config use-context admin@homelab-staging'
-alias kcp='kubectl config use-context admin@homelab-production'
-
-# flux
-source <(flux completion bash)
-alias fgk='flux get kustomizations'
-
-# talos
-source <(talosctl completion bash)
-
-# EDB
-source <(kubectl-cnp completion bash)
-
-# cilium
-source <(cilium completion bash)
-
 # env variables
 export VISUAL=nvim
 export EDITOR=nvim
@@ -267,12 +160,3 @@ else
 	#	source /usr/share/fzf/completion.bash
 	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 fi
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/mischa/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
-# Only needed for npm install on WSL
-#export NVM_DIR="$HOME/.config/nvm"
-#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
